@@ -4,7 +4,12 @@ using System.Linq;
 
 namespace BudgetService
 {
-    public class BudgetService
+    public interface IBudgetService
+    {
+        decimal uery(DateTime start, DateTime end);
+    }
+
+    public class BudgetService : IBudgetService
     {
         private readonly IBudgetRepo _bugBudgetRepo;
 
@@ -45,6 +50,8 @@ namespace BudgetService
             // 跨月查詢
 
             // 部分月查詢
+
+            throw new NotImplementedException();
         }
     }
 
