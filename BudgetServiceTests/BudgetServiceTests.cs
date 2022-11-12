@@ -28,6 +28,17 @@ namespace BudgetService.Tests
 
 
             var expected = 0;
+            GetAll();
+
+            // actual
+            var actual = this._budgetService.uery(start, end);
+
+            // assert
+            actual.Should().Be(expected);
+        }
+
+        private void GetAll()
+        {
             _budgetRepo.GetAll().Returns(
                 new List<Budget>()
                 {
@@ -47,12 +58,6 @@ namespace BudgetService.Tests
                         Amount = 3100
                     }
                 });
-
-            // actual
-            var actual = this._budgetService.uery(start, end);
-
-            // assert
-            actual.Should().Be(expected);
         }
     }
 }
