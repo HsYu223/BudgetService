@@ -23,7 +23,7 @@ namespace BudgetService.Tests
         }
 
         [Test()]
-        public void 結束日期大於起始日期()
+        public void 結束日期小於起始日期()
         {
             // arrange
             var start = new DateTime(2022, 09, 01);
