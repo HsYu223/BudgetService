@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using BudgetService.DataModel;
+using BudgetService.Interface;
 using FluentAssertions;
 using NSubstitute;
 using NUnit.Framework;
@@ -112,6 +114,23 @@ namespace BudgetService.Tests
             actual.Should().Be(expected);
         }
 
+        [Test()]
+        public void 跨年度查詢()
+        {
+            // arrange
+            var start = new DateTime(2022, 11, 20);
+            var end = new DateTime(2023, 1, 5);
+
+            var expected = 8210;
+            GetAll();
+
+            // actual
+            var actual = this._budgetService.Query(start, end);
+
+            // assert
+            actual.Should().Be(expected);
+        }
+
 
         private void GetAll()
         {
@@ -125,6 +144,11 @@ namespace BudgetService.Tests
                     },
                     new Budget
                     {
+                        YearMoth = "202210",
+                        Amount = 0
+                    },
+                    new Budget
+                    {
                         YearMoth = "202211",
                         Amount = 300
                     },
@@ -132,6 +156,11 @@ namespace BudgetService.Tests
                     {
                         YearMoth = "202212",
                         Amount = 3100
+                    },
+                    new Budget
+                    {
+                        YearMoth = "202301",
+                        Amount = 31000
                     }
                 });
         }

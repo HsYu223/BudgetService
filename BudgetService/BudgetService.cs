@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using BudgetService.Interface;
+using System;
 using System.Linq;
 
 namespace BudgetService
 {
-    public interface IBudgetService
-    {
-        decimal Query(DateTime start, DateTime end);
-    }
-
     public class BudgetService : IBudgetService
     {
         private readonly IBudgetRepo _bugBudgetRepo;
@@ -34,20 +29,25 @@ namespace BudgetService
             var monthDay = DateTime.DaysInMonth(start.Year, start.Month);
 
             // 當日查詢
-            if (day.Equals(1)) return Convert.ToDecimal(totalBudget.Select(x => x.Amount).FirstOrDefault() / monthDay);
-
+            if (day.Equals(1))
+            {
+                return Convert.ToDecimal(totalBudget.Select(x => x.Amount).FirstOrDefault() / monthDay);
+            }
 
             // 當月查詢
             if (startTYarMonth.Equals(endYearMonth) && day.Equals(monthDay))
+            {
                 return Convert.ToDecimal(totalBudget.Select(x => x.Amount).FirstOrDefault());
-
+            }
 
             // 部分月查詢
             if (startTYarMonth.Equals(endYearMonth) && !day.Equals(monthDay))
+            {
                 return Convert.ToDecimal(totalBudget.Select(x => x.Amount).FirstOrDefault() / monthDay * day);
+            }
 
-            var tmp = start; //yyyyMM
-            var tmpAmount = (decimal) 0;
+            var tmp = new DateTime(start.Year, start.Month, 1);
+            var tmpAmount = (decimal)0;
 
             while (tmp <= end)
             {
@@ -65,7 +65,8 @@ namespace BudgetService
                     var tmpMonthDay = end.Day;
                     var monthAmount = totalBudget.Where(x => x.YearMoth.Equals(tmp.ToString("yyyyMM")))
                         .Select(x => x.Amount).FirstOrDefault();
-                    tmpAmount += Convert.ToDecimal(monthAmount / monthDay * tmpMonthDay);
+                    var daysInMonth = DateTime.DaysInMonth(end.Year, end.Month);
+                    tmpAmount += Convert.ToDecimal(monthAmount / daysInMonth * tmpMonthDay);
                 }
                 else
                 {
@@ -73,24 +74,11 @@ namespace BudgetService
                         .Select(x => x.Amount).FirstOrDefault());
                 }
 
-
                 tmp = tmp.AddMonths(1);
             }
 
 
             return tmpAmount;
         }
-    }
-
-    public interface IBudgetRepo
-    {
-        List<Budget> GetAll();
-    }
-
-    public class Budget
-    {
-        public string YearMoth { get; set; }
-
-        public int Amount { get; set; }
     }
 }
